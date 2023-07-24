@@ -41,8 +41,3 @@ def main():
 if __name__ == "__main__":
     main()
 
-
-
-    st.altair_chart(alt.Chart(pd.DataFrame(data), height=500, width=500)
-        .mark_circle(color='#0068c9', opacity=0.5)
-        .encode(x='x:Q', y='y:Q'))
