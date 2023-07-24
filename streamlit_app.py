@@ -1,37 +1,44 @@
-from collections import namedtuple
-import altair as alt
-import math
-import pandas as pd
-import streamlit as st
+def create_radar_graph(data):
+    categories = data.columns[1:]
+    values = data.values.tolist()[0][1:]
+    values += values[:1]  # To close the loop of the radar graph
 
-"""
-# Welcome to Streamlit!
+    fig = go.Figure()
 
-Edit `/streamlit_app.py` to customize this app to your heart's desire :heart:
+    fig.add_trace(go.Scatterpolar(
+        r=values,
+        theta=categories,
+        fill='toself'
+    ))
 
-If you have any questions, checkout our [documentation](https://docs.streamlit.io) and [community
-forums](https://discuss.streamlit.io).
+    fig.update_layout(
+        polar=dict(
+            radialaxis=dict(visible=True, range=[0, max(values)])
+        ),
+        showlegend=False
+    )
 
-In the meantime, below is an example of what you can do with just a few lines of code:
-"""
+    return fig
 
 
-with st.echo(code_location='below'):
-    total_points = st.slider("Number of points in spiral", 1, 5000, 2000)
-    num_turns = st.slider("Number of turns in spiral", 1, 100, 9)
+def main():
+    st.title("Quarterback Radar Graph")
+    st.write("Upload a CSV file with QB data to visualize it as a radar graph.")
 
-    Point = namedtuple('Point', 'x y')
-    data = []
+    uploaded_file = st.file_uploader("Choose a CSV file", type=["csv"])
+    if uploaded_file is not None:
+        data = pd.read_csv(uploaded_file)
+        st.write("Data Preview:")
+        st.write(data)
 
-    points_per_turn = total_points / num_turns
+        st.write("Radar Graph:")
+        radar_graph = create_radar_graph(data)
+        st.plotly_chart(radar_graph)
 
-    for curr_point_num in range(total_points):
-        curr_turn, i = divmod(curr_point_num, points_per_turn)
-        angle = (curr_turn + 1) * 2 * math.pi * i / points_per_turn
-        radius = curr_point_num / total_points
-        x = radius * math.cos(angle)
-        y = radius * math.sin(angle)
-        data.append(Point(x, y))
+
+if __name__ == "__main__":
+    main()
+
 
     st.altair_chart(alt.Chart(pd.DataFrame(data), height=500, width=500)
         .mark_circle(color='#0068c9', opacity=0.5)
