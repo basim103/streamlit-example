@@ -1,3 +1,8 @@
+import streamlit as st
+import pandas as pd
+import plotly.graph_objects as go
+
+
 def create_radar_graph(data):
     categories = data.columns[1:]
     values = data.values.tolist()[0][1:]
