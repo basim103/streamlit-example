@@ -2,7 +2,6 @@ import streamlit as st
 import pandas as pd
 import plotly.graph_objects as go
 
-
 def create_radar_graph(data):
     categories = data.columns[1:]
     values = data.values.tolist()[0][1:]
@@ -25,7 +24,6 @@ def create_radar_graph(data):
 
     return fig
 
-
 def main():
     st.title("Quarterback Radar Graph")
     st.write("Upload a CSV file with QB data to visualize it as a radar graph.")
@@ -40,9 +38,9 @@ def main():
         radar_graph = create_radar_graph(data)
         st.plotly_chart(radar_graph)
 
-
 if __name__ == "__main__":
     main()
+
 
 
     st.altair_chart(alt.Chart(pd.DataFrame(data), height=500, width=500)
